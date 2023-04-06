@@ -4,13 +4,30 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 
 public class GameScreen extends JFrame {
 
     private String username;
+
+    //İSİM KONTROL FONKSİYONU
+    public boolean nameIsUse(String name) throws FileNotFoundException, IOException {
+
+        BufferedReader br = new BufferedReader(new FileReader("bestscore.txt"));
+        String line = br.readLine();
+
+        while (line != null && line != " ") {
+            String spl[] = line.split(":");
+            if (name.equalsIgnoreCase(spl[0])) {
+                JOptionPane.showMessageDialog(null, "BU OYUNCU ADI KULLANILIYOR!", "", 2);
+                return true;
+            }
+            line = br.readLine();
+        }
+        return false;
+    }
+
+
     //GİRİŞ EKRANI
     public GameScreen() throws FileNotFoundException, IOException {
 
@@ -26,18 +43,19 @@ public class GameScreen extends JFrame {
             if (username.isEmpty() || username.equals(" ")) {
                 JOptionPane.showMessageDialog(null, "ALAN BOŞ BIRAKILAMAZ!", "ERROR", 2);
             } else {
-                bool=false;
-//                if (nameIsUse(username)) {
-//
-//                    bool = true;
-//
-//                }
-//                else {
-//                    bool = false;
-//                    playerNameDynamicLabel.setText(username.toUpperCase());
-//                }
+                if (nameIsUse(username)) {
+
+                    bool = true;
+
+                }
+                else {
+                    bool = false;
+                    playerNameDynamicLabel.setText(username.toUpperCase());
+                }
             }
         }
+
+
 
 //        buttonsTable();
 //        bestScoreFileReader();
