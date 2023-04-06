@@ -2,13 +2,26 @@ package puzzle;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GameScreen extends JFrame {
 
-    private String username;
+
+    // DEĞİŞKENLER
+    List<JButton> listForButtons = new LinkedList<>();
+    String username;
+    String image;
+    int count = 0;
+    Integer score = 0;
+    JButton firstButton;
+    JButton secondButton;
 
     //İSİM KONTROL FONKSİYONU
     public boolean nameIsUse(String name) throws FileNotFoundException, IOException {
@@ -25,6 +38,109 @@ public class GameScreen extends JFrame {
             line = br.readLine();
         }
         return false;
+    }
+    // RESIM EKLEME ANA RESIM
+    public Image imageForGame(int i) {
+        try {
+            BufferedImage bufimage1 = ImageIO.read(new File("images/images" + Integer.toString(i) + ".jpg"));
+            Image image1 = bufimage1.getScaledInstance(listForButtons.get(i - 1).getWidth(), listForButtons.get(i - 1).getHeight(), Image.SCALE_SMOOTH);
+            //  ImageIcon icon1 = new ImageIcon(image1);
+
+            return image1;
+        } catch (IOException ex) {
+            Logger.getLogger(GameScreen.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    // RESMI PARCALAYAN FONKSIYON
+    public void divideFunction(String path) throws IOException {
+
+        image = path;
+        FileInputStream fs = new FileInputStream(path);
+
+        BufferedImage bfimage = ImageIO.read(fs);
+
+        int row = 4;
+        int column = 4;
+        int imageNumber = row * column;
+
+        int newImageWidth = bfimage.getWidth() / column;
+        int newImageHeight = bfimage.getHeight() / row;
+        int imageNo = 0;
+        BufferedImage bfimage1[] = new BufferedImage[imageNumber];
+
+        for (int x = 0; x < row; x++) {
+            for (int y = 0; y < column; y++) {
+                bfimage1[imageNo] = new BufferedImage(newImageWidth, newImageHeight, 1);
+                Graphics2D g = bfimage1[imageNo].createGraphics();
+                imageNo++;
+                g.drawImage(bfimage, 0, 0, newImageWidth, newImageHeight, newImageWidth
+                                * y, newImageHeight * x, newImageWidth * y + newImageWidth,
+                        newImageHeight * x + newImageHeight, null);
+                g.dispose();
+            }
+        }
+        System.out.println("Resim parcalandi");
+
+
+        for (int i = 0; i < bfimage1.length; i++) {
+            int j = i + 1;
+            ImageIO.write(bfimage1[i], "jpg", new File("images/images" + j + ".jpg"));
+
+        }
+    }
+
+    // RESMI 4X4 SEKLINDE SIRALAYAN FONKSIYON
+    public void buttonsTable() {
+
+        listForButtons.add(button1);
+        listForButtons.add(button2);
+        listForButtons.add(button3);
+        listForButtons.add(button4);
+        listForButtons.add(button5);
+        listForButtons.add(button6);
+        listForButtons.add(button7);
+        listForButtons.add(button8);
+        listForButtons.add(button9);
+        listForButtons.add(button10);
+        listForButtons.add(button11);
+        listForButtons.add(button12);
+        listForButtons.add(button13);
+        listForButtons.add(button14);
+        listForButtons.add(button15);
+        listForButtons.add(button16);
+
+        Container con = getContentPane();
+        con.setLayout(null);
+        int x = -110;
+        int y = 90;
+
+        for (int i = 0; i < 16; i++) {
+            x += 160;
+
+            switch (i) {
+                case 4:
+                    x = 50;
+                    y += 160;
+                    break;
+                case 8:
+                    x = 50;
+                    y += 160;
+                    break;
+                case 12:
+                    x = 50;
+                    y += 160;
+                    break;
+                default:
+                    break;
+            }
+
+            listForButtons.get(i).setBounds(x, y, 160, 160);
+            listForButtons.get(i).setBorder(new LineBorder(Color.BLACK));
+            con.add(listForButtons.get(i));
+        }
+
     }
 
 
