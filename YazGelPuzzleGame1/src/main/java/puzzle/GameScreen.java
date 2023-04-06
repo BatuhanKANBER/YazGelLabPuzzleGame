@@ -5,7 +5,9 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
 import java.io.*;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -22,6 +24,152 @@ public class GameScreen extends JFrame {
     Integer score = 0;
     JButton firstButton;
     JButton secondButton;
+
+    //BUTON KONTROL FONKSİYONU
+    public void buttonClick(java.awt.event.ActionEvent e) throws IOException {
+
+        JButton clickedButton = (JButton) e.getSource();
+
+        if (firstButton == null) {
+            firstButton = clickedButton;
+
+        } else {
+            if (!firstButton.getName().equals(clickedButton.getName())) {
+                secondButton = clickedButton;
+
+                Icon iconn1 = firstButton.getIcon();
+                Icon iconn2 = secondButton.getIcon();
+
+                firstButton.setIcon(iconn2);
+                secondButton.setIcon(iconn1);
+
+                boolean b1 = isMatch(firstButton);
+
+                boolean b2 = isMatch(secondButton);
+
+                if (b1 == true) {
+                    firstButton.setEnabled(false);
+                    score+=5;
+                    count++;
+                }
+                if (b2 == true) {
+                    secondButton.setEnabled(false);
+                    score+=5;
+                    count++;
+                } else {
+                    score-=10;
+                }
+
+                firstButton = null;
+                secondButton = null;
+            }
+            scoreDynamicLabel.setText(score.toString());
+        }
+        if (count == 16) {
+            scoreDynamicLabel.setText(score.toString());
+            String line = username + ":" + score.toString();
+            bestScoreWriter(line);
+            JOptionPane.showMessageDialog(null, "Tebrikler skorunuz: "+score.toString(), "TEBRİKLER", 1);
+
+        }
+
+    }
+
+    //BUTONLARA DAĞTILMIŞ RESİM
+    public void imageForButtons(LinkedList list) throws IOException {
+
+        for (int i = 0; i < 16; i++) {
+
+            BufferedImage bufimage1 = ImageIO.read(new File("images/images" + list.get(i) + ".jpg"));
+            Image image1 = bufimage1.getScaledInstance(listForButtons.get(i).getWidth(), listForButtons.get(i).getHeight(), Image.SCALE_SMOOTH);
+            ImageIcon icon111 = new ImageIcon(image1);
+            listForButtons.get(i).setIcon(icon111);
+            boolean bool = isMatch(listForButtons.get(i));
+            listForButtons.get(i).setEnabled(!bool);
+
+            if (bool == true) {
+                count++;
+            }
+        }
+
+        if (count >= 1) {
+            mixButton.setEnabled(false);
+        } else {
+
+            mixFunction();
+        }
+    }
+
+    //BUTONLARI RANDOM DAĞITAN FONKSİYON
+    public void mixFunction() throws IOException {
+
+        count = 0;
+        score = 0;
+
+        LinkedList<Integer> list = new LinkedList<>();
+        for (int i = 1; i < 17; i++) {
+            list.add(i);
+        }
+        Collections.shuffle(list);
+        imageForButtons(list);
+
+    }
+
+    //RESMİN POZİSYONUYLA EŞLEŞMESİNİ KONTROL EDEN FONKSİYON
+    public boolean isMatch(JButton btn) {
+
+        boolean match = true;
+        Integer bid = Integer.parseInt(btn.getName());
+
+
+        Image image = imageForGame(bid);
+        Image btnImage = ((ImageIcon) btn.getIcon()).getImage();
+
+        try {
+
+            PixelGrabber pgrab1 = new PixelGrabber(image, 0, 0, -1, -1, false);
+            PixelGrabber pgrab2 = new PixelGrabber(btnImage, 0, 0, -1, -1, false);
+
+            int[] data1 = null;
+
+            if (pgrab1.grabPixels()) {
+                int width = pgrab1.getWidth();
+                int height = pgrab1.getHeight();
+                data1 = new int[width * height];
+                data1 = (int[]) pgrab1.getPixels();
+            }
+
+            int[] data2 = null;
+
+            if (pgrab2.grabPixels()) {
+                int width = pgrab2.getWidth();
+                int height = pgrab2.getHeight();
+                data2 = new int[width * height];
+                data2 = (int[]) pgrab2.getPixels();
+            }
+
+            boolean isEqual = java.util.Arrays.equals(data1, data2);
+
+            if (!isEqual) {
+                match = false;
+            }
+        } catch (InterruptedException e) {
+            e.getMessage();
+        }
+        return match;
+    }
+
+    //OYUNCU VE SKORLARI DOSYAYA YAZDIRAN FONKSİYON
+    public void bestScoreWriter(String line) throws IOException {
+        File file = new File("bestscore.txt");
+        FileWriter fileWriter = new FileWriter(file, true);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+        bufferedWriter.write(line.toUpperCase());
+        bufferedWriter.newLine();
+        bufferedWriter.close();
+        System.out.println("Dosya Yazdırma İşlemi Başarılı");
+    }
 
     //İSİM KONTROL FONKSİYONU
     public boolean nameIsUse(String name) throws FileNotFoundException, IOException {
@@ -222,11 +370,11 @@ public class GameScreen extends JFrame {
         button1.setPreferredSize(new java.awt.Dimension(160, 160));
         button1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -237,11 +385,11 @@ public class GameScreen extends JFrame {
         button2.setPreferredSize(new java.awt.Dimension(160, 160));
         button2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -252,11 +400,11 @@ public class GameScreen extends JFrame {
         button3.setPreferredSize(new java.awt.Dimension(160, 160));
         button3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -267,11 +415,11 @@ public class GameScreen extends JFrame {
         button4.setPreferredSize(new java.awt.Dimension(160, 160));
         button4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -282,11 +430,11 @@ public class GameScreen extends JFrame {
         button5.setPreferredSize(new java.awt.Dimension(160, 160));
         button5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -297,11 +445,11 @@ public class GameScreen extends JFrame {
         button6.setPreferredSize(new java.awt.Dimension(160, 160));
         button6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -312,11 +460,11 @@ public class GameScreen extends JFrame {
         button7.setPreferredSize(new java.awt.Dimension(160, 160));
         button7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -327,11 +475,11 @@ public class GameScreen extends JFrame {
         button8.setPreferredSize(new java.awt.Dimension(160, 160));
         button8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -342,11 +490,11 @@ public class GameScreen extends JFrame {
         button9.setPreferredSize(new java.awt.Dimension(160, 160));
         button9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -357,11 +505,11 @@ public class GameScreen extends JFrame {
         button10.setPreferredSize(new java.awt.Dimension(160, 160));
         button10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -372,11 +520,11 @@ public class GameScreen extends JFrame {
         button11.setPreferredSize(new java.awt.Dimension(160, 160));
         button11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -388,11 +536,11 @@ public class GameScreen extends JFrame {
         button12.setPreferredSize(new java.awt.Dimension(160, 160));
         button12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -403,11 +551,11 @@ public class GameScreen extends JFrame {
         button13.setPreferredSize(new java.awt.Dimension(160, 160));
         button13.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -418,11 +566,11 @@ public class GameScreen extends JFrame {
         button14.setPreferredSize(new java.awt.Dimension(160, 160));
         button14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -433,11 +581,11 @@ public class GameScreen extends JFrame {
         button15.setPreferredSize(new java.awt.Dimension(160, 160));
         button15.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -448,11 +596,11 @@ public class GameScreen extends JFrame {
         button16.setPreferredSize(new java.awt.Dimension(160, 160));
         button16.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    buttonClick(e);
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    buttonClick(e);
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
@@ -484,11 +632,11 @@ public class GameScreen extends JFrame {
         mixButton.setSize(12,12);
         mixButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-//                try {
-//                    mixFunction();
-//                } catch (IOException message) {
-//                    message.getMessage();
-//                }
+                try {
+                    mixFunction();
+                } catch (IOException message) {
+                    message.getMessage();
+                }
             }
         });
 
