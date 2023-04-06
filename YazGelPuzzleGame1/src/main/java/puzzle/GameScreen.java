@@ -115,6 +115,42 @@ public class GameScreen extends JFrame {
 
     }
 
+    //EŞLEŞEN BUTONLARI DİSABLED HALE GETİREN FONKSİYON
+    public void buttonDisabled() {
+        for (int i = 0; i < 16; i++) {
+            listForButtons.get(i).setEnabled(false);
+        }
+    }
+
+    //EN İYİ OYUNCUYU EKRANA DOSYADAN YAZDIRAN FONKSİYON
+    public void bestScoreFileReader() throws FileNotFoundException, IOException {
+
+        BufferedReader br = new BufferedReader(new FileReader("bestscore.txt"));
+        String line = br.readLine();
+        Integer bestScore = 0;
+        String bestPlayer = null;
+        while (line != null && line != " ") {
+            String spl[] = line.split(":");
+
+            if (bestScore < Integer.parseInt(spl[1])) {
+                bestScore = Integer.parseInt(spl[1]);
+                bestPlayer = spl[0];
+
+            }
+            line = br.readLine();
+        }
+        if (bestPlayer == null) {
+
+            bestPlayerNameDynamicLabel.setText("0");
+            bestScoreDynamicLabel.setText(" ");
+        } else {
+            bestPlayerNameDynamicLabel.setText(bestScore.toString());
+            bestScoreDynamicLabel.setText(bestPlayer.toUpperCase());
+        }
+
+
+    }
+
     //RESMİN POZİSYONUYLA EŞLEŞMESİNİ KONTROL EDEN FONKSİYON
     public boolean isMatch(JButton btn) {
 
@@ -321,9 +357,9 @@ public class GameScreen extends JFrame {
 
 
 
-//        buttonsTable();
-//        bestScoreFileReader();
-//        buttonDisabled();
+        buttonsTable();
+        bestScoreFileReader();
+        buttonDisabled();
 
     }
 
