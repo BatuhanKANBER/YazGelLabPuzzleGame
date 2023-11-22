@@ -8,7 +8,7 @@ public class UnitTest {
 
     // Test for the bestScoreWriter function
     @Test
-    public void testBestScoreWriter() throws java.io.FileNotFoundException{
+    public void testBestScoreWriter(){
         // Create an instance of your class
         GameScreen gameScreen = new GameScreen();
 
