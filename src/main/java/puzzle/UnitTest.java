@@ -3,14 +3,14 @@ package puzzle;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import java.io.IOException;
+import java.io.*;
 
 
 public class UnitTest {
 
     // Test for the bestScoreWriter function
     @Test
-    public void testBestScoreWriter(){
+    public void testBestScoreWriter() throws FileNotFoundException{
         // Create an instance of your class
         GameScreen gameScreen = new GameScreen();
 
