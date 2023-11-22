@@ -18,13 +18,12 @@ public class UnitTest {
         String testLine = "Test Line";
 
         // Call the bestScoreWriter function and check for exceptions
-        assertDoesNotThrow(() -> {
-            try{
-                gameScreen.bestScoreWriter(testLine);
-            }catch(IOException e){
-                e.getMessage();
-            }
-         
-        });
+        try{
+            assertDoesNotThrow(() -> {
+                gameScreen.bestScoreWriter(testLine);     
+            });
+        }catch(IOException e){
+            e.getMessage();
+        }
     }
 }
