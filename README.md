@@ -15,4 +15,4 @@ Nasıl Oynanır?
 •16 eşit parçaya bölünen resmimizin 1 parçası doğru konumlandırılıp inaktif halde olacaktır. Diğer parçalar da doğru yere yerleştirildiklerinde inaktif(disabled) duruma geçeceklerdir.
 <br>
 
-•Artık işleyişi bildiğinize göre puzzle'ı tamamlayabilirsiniz, iyi oyunlar!! :)
+•Artık işleyişi bildiğinize göre puzzle'ı tamamlayabilirsiniz, iyi oyunlar!! :))
