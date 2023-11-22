@@ -21,7 +21,7 @@ public class UnitTest {
         assertDoesNotThrow(() -> {
             try{
                 gameScreen.bestScoreWriter(testLine);
-            }catch(IOExeption e){
+            }catch(IOException e){
                 e.getmessage();
             }
          
