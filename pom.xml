@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>4.12</version> <!-- Kullandığınız versiyona güncelleyin -->
+            <version>5.7.2</version> <!-- Kullandığınız versiyona güncelleyin -->
             <scope>test</scope>
         </dependency>
     </dependencies>
