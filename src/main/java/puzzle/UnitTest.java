@@ -19,11 +19,7 @@ public class UnitTest {
 
         // Call the bestScoreWriter function and check for exceptions
         assertDoesNotThrow(() -> {
-            try {
-                gameScreen.bestScoreWriter(testLine);
-            } catch (IOException e) {
-                fail("IOException should not be thrown");
-            }
+            gameScreen.bestScoreWriter(testLine);
         });
     }
 }
