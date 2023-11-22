@@ -17,7 +17,7 @@
     <dependencies>
         <!-- JUnit 5 bağımlılığı ekle -->
         <dependency>
-           <groupId>junit</groupId>     <!-- NOT org.junit here -->
+           <groupId>org.junit</groupId>
            <artifactId>junit-dep</artifactId>
            <version>4.8.2</version>
          </dependency>
