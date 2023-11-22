@@ -22,7 +22,7 @@ public class UnitTest {
             try{
                 gameScreen.bestScoreWriter(testLine);
             }catch(IOException e){
-                e.getmessage();
+                e.getMessage();
             }
          
         });
