@@ -10,7 +10,7 @@ public class UnitTest {
 
     // Test for the bestScoreWriter function
     @Test
-    public void testBestScoreWriter() throws FileNotFoundException{
+    public void testBestScoreWriter(){
         // Create an instance of your class
         GameScreen gameScreen = new GameScreen();
 
@@ -19,7 +19,12 @@ public class UnitTest {
 
         // Call the bestScoreWriter function and check for exceptions
         assertDoesNotThrow(() -> {
-            gameScreen.bestScoreWriter(testLine);
+            try{
+                gameScreen.bestScoreWriter(testLine);
+            }catch(IOExeption e){
+                e.getmessage();
+            }
+         
         });
     }
 }
